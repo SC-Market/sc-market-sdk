@@ -8,16 +8,29 @@ except ImportError:  # pragma: no cover
     from typing_extensions import Literal, TypedDict  # type: ignore
 
 
+class PublicFeedLicense(TypedDict):
+    """Licence of the public data feeds: CC BY 4.0."""
+    #: SPDX identifier, "CC-BY-4.0"
+    license: str
+    #: Licence text
+    url: str
+    #: The credit line to show when reusing the data
+    attribution: str
+    #: Rights notice: game data, and SC Market's aggregation and price data
+    notice: str
+
+
 class PublicFeedInfo(TypedDict):
-    """Envelope shared by every public data feed (prices now; missions,
-blueprints and items later): which dataset, its schema version, and the
-terms. Free to use; rate limits only protect against abuse."""
+    """Envelope shared by every public data feed (prices, items; missions and
+blueprints later): which dataset, its schema version, the terms and the
+licence (CC BY 4.0). Free to use; rate limits only protect against abuse."""
     #: Dataset name, e.g. "prices"
     dataset: str
     #: Schema version of the dataset; bumped only on a breaking change
     version: float
-    #: Usage terms: free, attribution requested
+    #: Usage terms in words: free, no key, CC BY 4.0 with attribution
     terms: str
+    license: "PublicFeedLicense"
 
 
 class PriceOracleItemRef(TypedDict):
@@ -128,4 +141,4 @@ class PriceOracleItem(TypedDict):
     attribution: str
     links: "PriceOracleLinks"
 
-__all__ = ["PublicFeedInfo", "PriceOracleItemRef", "PriceOracleCurrent", "PriceOracleDailyPoint", "PriceOracleTrend", "PriceOracleSales", "PriceOracleRules", "PriceOracleMethodology", "PriceOracleLinks", "PriceOracleItem"]
+__all__ = ["PublicFeedLicense", "PublicFeedInfo", "PriceOracleItemRef", "PriceOracleCurrent", "PriceOracleDailyPoint", "PriceOracleTrend", "PriceOracleSales", "PriceOracleRules", "PriceOracleMethodology", "PriceOracleLinks", "PriceOracleItem"]
