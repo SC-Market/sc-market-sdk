@@ -1,0 +1,389 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SC Market price feed documents (subset of the site API spec)",
+    "version": "2.0.0",
+    "x-source": "https://api.sc-market.space/api/v2/openapi.json"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "PublicFeedInfo": {
+        "description": "Envelope shared by every public data feed (prices now; missions,\nblueprints and items later): which dataset, its schema version, and the\nterms. Free to use; rate limits only protect against abuse.",
+        "properties": {
+          "dataset": {
+            "type": "string",
+            "description": "Dataset name, e.g. \"prices\""
+          },
+          "version": {
+            "type": "number",
+            "format": "double",
+            "description": "Schema version of the dataset; bumped only on a breaking change"
+          },
+          "terms": {
+            "type": "string",
+            "description": "Usage terms: free, attribution requested"
+          }
+        },
+        "required": [
+          "dataset",
+          "version",
+          "terms"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleItemRef": {
+        "description": "The game item a price document is about.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Game item UUID"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Short slug (`<8 hex>--<name>`), the feed's and the aggregate page's id"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleCurrent": {
+        "description": "Current asks: eligible public listings right now. All prices in aUEC per unit.",
+        "properties": {
+          "ask_count": {
+            "type": "number",
+            "format": "double",
+            "description": "Listings counted (after outlier trimming)"
+          },
+          "seller_count": {
+            "type": "number",
+            "format": "double",
+            "description": "Distinct sellers counted (after outlier trimming)"
+          },
+          "quantity_available": {
+            "type": "number",
+            "format": "double",
+            "description": "Units available across the counted listings"
+          },
+          "lowest_ask": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "Lowest counted ask; null without any counted seller"
+          },
+          "median_ask": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "Median of the sellers' lowest asks; null below the minimum seller count"
+          },
+          "highest_ask": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "Highest counted ask; null without any counted seller"
+          },
+          "outliers_excluded": {
+            "type": "number",
+            "format": "double",
+            "description": "Sellers left out as outliers or placeholder prices"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "none",
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Weight the numbers can bear: none (no listings), low (under 3 sellers: no\nmedian, show the listings themselves), medium (3-5 sellers), high (6+)"
+          },
+          "sample_note": {
+            "type": "string",
+            "description": "The sample size in words, to show next to every number"
+          }
+        },
+        "required": [
+          "ask_count",
+          "seller_count",
+          "quantity_available",
+          "lowest_ask",
+          "median_ask",
+          "highest_ask",
+          "outliers_excluded",
+          "confidence",
+          "sample_note"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleDailyPoint": {
+        "description": "One day of the 30-day trend (from the daily snapshot).",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "UTC day, YYYY-MM-DD"
+          },
+          "median_ask": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowest_ask": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ask_count": {
+            "type": "number",
+            "format": "double"
+          },
+          "seller_count": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "date",
+          "median_ask",
+          "lowest_ask",
+          "ask_count",
+          "seller_count"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleTrend": {
+        "properties": {
+          "days_with_data": {
+            "type": "number",
+            "format": "double",
+            "description": "Days in the window with a published daily median"
+          },
+          "median_30d": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "Median of the daily medians; null below the minimum number of days"
+          },
+          "change_pct": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "% change, first to last daily median in the window; null below the minimum"
+          },
+          "daily": {
+            "items": {
+              "$ref": "#/components/schemas/PriceOracleDailyPoint"
+            },
+            "type": "array",
+            "description": "Daily points, oldest first"
+          }
+        },
+        "required": [
+          "days_with_data",
+          "median_30d",
+          "change_pct",
+          "daily"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleSales": {
+        "description": "Completed SC Market orders of the item in the last 30 days.",
+        "properties": {
+          "count": {
+            "type": "number",
+            "format": "double",
+            "description": "Completed sales (order lines) in the window"
+          },
+          "median_price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "description": "Median per-unit sale price; null below the minimum sale count"
+          }
+        },
+        "required": [
+          "count",
+          "median_price"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleRules": {
+        "properties": {
+          "min_listing_age_hours": {
+            "type": "number",
+            "format": "double"
+          },
+          "placeholder_price_max": {
+            "type": "number",
+            "format": "double"
+          },
+          "min_sellers_for_trim": {
+            "type": "number",
+            "format": "double"
+          },
+          "iqr_multiplier": {
+            "type": "number",
+            "format": "double"
+          },
+          "min_sellers_for_median": {
+            "type": "number",
+            "format": "double"
+          },
+          "min_sellers_for_high_confidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "min_days_for_trend": {
+            "type": "number",
+            "format": "double"
+          },
+          "trend_window_days": {
+            "type": "number",
+            "format": "double"
+          },
+          "min_sales_for_median": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "min_listing_age_hours",
+          "placeholder_price_max",
+          "min_sellers_for_trim",
+          "iqr_multiplier",
+          "min_sellers_for_median",
+          "min_sellers_for_high_confidence",
+          "min_days_for_trend",
+          "trend_window_days",
+          "min_sales_for_median"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleMethodology": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Plain-text description of what is counted and how"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/PriceOracleRules"
+          }
+        },
+        "required": [
+          "text",
+          "rules"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleLinks": {
+        "properties": {
+          "page": {
+            "type": "string",
+            "description": "Human-readable aggregate page"
+          },
+          "json": {
+            "type": "string",
+            "description": "This document as the public JSON feed"
+          },
+          "index": {
+            "type": "string",
+            "description": "Index of every priced item"
+          }
+        },
+        "required": [
+          "page",
+          "json",
+          "index"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "PriceOracleItem": {
+        "description": "Player-listing price document of one game item.",
+        "properties": {
+          "feed": {
+            "$ref": "#/components/schemas/PublicFeedInfo"
+          },
+          "item": {
+            "$ref": "#/components/schemas/PriceOracleItemRef"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "aUEC"
+            ],
+            "nullable": false,
+            "description": "Always \"aUEC\" (in-game currency, not ISO 4217)"
+          },
+          "unit_note": {
+            "type": "string",
+            "description": "What the unit of every price is, in words"
+          },
+          "as_of": {
+            "type": "string",
+            "description": "When `current` was computed (ISO 8601)"
+          },
+          "current": {
+            "$ref": "#/components/schemas/PriceOracleCurrent"
+          },
+          "trend_30d": {
+            "$ref": "#/components/schemas/PriceOracleTrend"
+          },
+          "sales_30d": {
+            "$ref": "#/components/schemas/PriceOracleSales"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Plain-text statement of the current numbers, with sample size and confidence"
+          },
+          "methodology": {
+            "$ref": "#/components/schemas/PriceOracleMethodology"
+          },
+          "attribution": {
+            "type": "string",
+            "description": "How to credit the data when citing or reusing it"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PriceOracleLinks"
+          }
+        },
+        "required": [
+          "feed",
+          "item",
+          "currency",
+          "unit_note",
+          "as_of",
+          "current",
+          "trend_30d",
+          "sales_30d",
+          "summary",
+          "methodology",
+          "attribution",
+          "links"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }
+}

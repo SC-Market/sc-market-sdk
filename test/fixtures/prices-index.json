@@ -1,0 +1,77 @@
+{
+  "feed": {
+    "dataset": "prices",
+    "version": 1,
+    "terms": "Free to use, no key needed. Attribution requested. Rate limits exist only to protect the service from abuse."
+  },
+  "date": "2026-10-31",
+  "as_of": "2026-10-31T21:32:27.404Z",
+  "currency": "aUEC",
+  "unit_note": "All prices are in aUEC, Star Citizen's in-game currency (not real money), per unit.",
+  "count": 250,
+  "coverage": {
+    "none": 0,
+    "low": 228,
+    "medium": 22,
+    "high": 0
+  },
+  "items": [
+    {
+      "slug": "dff0ce09--a03-canuto-sniper-rifle",
+      "name": "A03 \"Canuto\" Sniper Rifle",
+      "type": "Ranged Weapon",
+      "page": "https://sc-market.space/market/aggregate/dff0ce09--a03-canuto-sniper-rifle",
+      "json": "https://api.sc-market.space/api/public/prices/dff0ce09--a03-canuto-sniper-rifle.json",
+      "ask_count": 1,
+      "seller_count": 1,
+      "confidence": "low",
+      "lowest_ask": 1000000,
+      "median_ask": null,
+      "median_30d": null,
+      "change_pct_30d": null
+    },
+    {
+      "slug": "2e6326c5--a03-luckbringer-sniper-rifle",
+      "name": "A03 \"Luckbringer\" Sniper Rifle",
+      "type": "Ranged Weapon",
+      "page": "https://sc-market.space/market/aggregate/2e6326c5--a03-luckbringer-sniper-rifle",
+      "json": "https://api.sc-market.space/api/public/prices/2e6326c5--a03-luckbringer-sniper-rifle.json",
+      "ask_count": 1,
+      "seller_count": 1,
+      "confidence": "low",
+      "lowest_ask": 150000,
+      "median_ask": null,
+      "median_30d": null,
+      "change_pct_30d": null
+    },
+    {
+      "slug": "c174f012--a03-red-alert-sniper-rifle",
+      "name": "A03 \"Red Alert\" Sniper Rifle",
+      "type": "Ranged Weapon",
+      "page": "https://sc-market.space/market/aggregate/c174f012--a03-red-alert-sniper-rifle",
+      "json": "https://api.sc-market.space/api/public/prices/c174f012--a03-red-alert-sniper-rifle.json",
+      "ask_count": 1,
+      "seller_count": 1,
+      "confidence": "low",
+      "lowest_ask": 25000,
+      "median_ask": null,
+      "median_30d": null,
+      "change_pct_30d": null
+    }
+  ],
+  "methodology": {
+    "text": "Asking prices of SC Market player listings (player-to-player offers on SC Market only, not an in-game or market-wide price), in aUEC (Star Citizen's in-game currency) per unit. Counted: active, public, fixed-price listings sold per unit, at least 24 hours old, in stock and priced above 1 aUEC (placeholders); test accounts are excluded. Each seller counts once per item, at its lowest ask. With 4 or more sellers, outliers outside 1.5x the interquartile range of the log prices are excluded. A median is shown only with 3+ sellers (confidence: low below 3 sellers, medium below 6, high from 6); the 30-day median and change need 7+ days of daily medians (snapshot once a day, UTC); a sale median needs 3+ completed SC Market orders in 30 days. These are asking prices, not in-game terminal prices.",
+    "rules": {
+      "min_listing_age_hours": 24,
+      "placeholder_price_max": 1,
+      "min_sellers_for_trim": 4,
+      "iqr_multiplier": 1.5,
+      "min_sellers_for_median": 3,
+      "min_sellers_for_high_confidence": 6,
+      "min_days_for_trend": 7,
+      "trend_window_days": 30,
+      "min_sales_for_median": 3
+    }
+  },
+  "attribution": "Data: SC Market player listings (https://sc-market.space). Please credit SC Market and link to the item's page when citing."
+}

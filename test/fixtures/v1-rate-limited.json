@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests for this token",
+    "details": {
+      "retry_after_seconds": 2
+    }
+  }
+}
