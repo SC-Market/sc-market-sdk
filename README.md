@@ -46,7 +46,7 @@ The item document types are generated from the site API spec, which describes th
 Node 18 or later, or any runtime with `fetch` (Deno, Bun, Cloudflare Workers). The package has no runtime dependencies, and it ships both ESM and CommonJS builds.
 
 ```sh
-npm install @sc-market/sdk   # once it's published; until then, see "Use it before it's on npm"
+npm install @sc-market/sdk
 ```
 
 ```ts
@@ -165,7 +165,7 @@ Nothing is published automatically, and there is no CI. To release:
 4. **PyPI:** `cd python && python3 -m pip install --upgrade build twine && python3 -m build && python3 -m twine upload dist/*`. Twine asks for a PyPI API token; the username is `__token__`.
 5. Tag the release: `git tag v0.1.0 && git push --tags`.
 
-### Use it before it's on npm
+### Use an unreleased build
 
 `npm install github:SC-Market/sc-market-sdk` doesn't build `dist/`. Instead, clone this repo, run `npm install && npm run build && npm pack`, then run `npm install /path/to/sc-market-sdk-0.1.0.tgz` in your project. For Python: `pip install ./python`.
 
