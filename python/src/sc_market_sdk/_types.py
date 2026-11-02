@@ -385,7 +385,6 @@ class _MinimalUserRequired(TypedDict):
 
 class MinimalUser(_MinimalUserRequired, total=False):
     badges: Optional["BadgeData"]
-    last_seen: str
     in_game: bool
 
 
@@ -398,7 +397,6 @@ class _MinimalContractorRequired(TypedDict):
 
 class MinimalContractor(_MinimalContractorRequired, total=False):
     badges: Optional["BadgeData"]
-    last_seen: str
     members_online: float
 
 
@@ -633,6 +631,23 @@ class ListingDetail(_ListingDetailRequired, total=False):
     in_carts: float
 
 
+LastSeenBucket = Literal["today", "this_week", "this_month", "over_a_month"]
+
+
+ReplyTimeBucket = Literal["within_hour", "within_hours", "within_day", "within_days", "slow"]
+
+
+class SellerActivity(TypedDict):
+    #: Coarse last-seen bucket; null if the seller hides it or has no activity yet.
+    last_seen: Optional["LastSeenBucket"]
+    #: Typical reply time in order/offer chats; null below the minimum sample size.
+    reply_time: Optional["ReplyTimeBucket"]
+    #: Number of chats the reply time is based on; null when reply_time is null.
+    reply_sample_size: Optional[float]
+    #: Orders this shop has completed.
+    completed_orders: float
+
+
 class _SellerInfoRequired(TypedDict):
     #: Shop ID
     shop_id: str
@@ -650,6 +665,8 @@ class SellerInfo(_SellerInfoRequired, total=False):
     """Shop information for a listing's seller"""
     #: Shop logo URL
     logo_url: str
+    #: Seller activity: coarse last seen, typical reply time, completed orders
+    activity: "SellerActivity"
 
 
 class _GameItemInfoRequired(TypedDict):
@@ -821,4 +838,4 @@ class PublicData_GetStockLotsResponse_(TypedDict):
     """Every success response: `{ "data": T }`."""
     data: "GetStockLotsResponse"
 
-__all__ = ["PublicErrorCode", "Record_string_unknown_", "PublicValidationError", "PublicErrorBody", "PublicShopPermissions", "PublicShop", "PublicShopList", "PublicData_PublicShopList_", "PublicData_PublicShop_", "MyListingItem", "GetMyListingsResponse", "PublicData_GetMyListingsResponse_", "OrderPreview", "GetOrdersResponse", "PublicData_GetOrdersResponse_", "OrderMarketListingV1", "VariantAttributes", "OrderVariantItem", "OrderMarketListingV2", "OrderVariantDetail", "OrderItemDetail", "GetOrderDetailResponse", "PublicData_GetOrderDetailResponse_", "OrderStatusChangeResult", "PublicData_OrderStatusChangeResult_", "OrderStatusChangeBody", "Rating", "BadgeMetadata", "BadgeData", "MinimalUser", "MinimalContractor", "OfferMarketListingV1", "OfferVariantItem", "OfferMarketListingV2", "OfferV2", "DBAvailabilityEntry", "OfferAvailability", "OfferSessionV2", "SearchOffersV2Response", "PublicData_SearchOffersV2Response_", "GetOfferSessionV2Response", "PublicData_GetOfferSessionV2Response_", "OfferAcceptResult", "PublicData_OfferAcceptResult_", "OfferDeclineResult", "PublicData_OfferDeclineResult_", "PublicScope", "PublicOrgRef", "PublicMe", "PublicData_PublicMe_", "ListingDetail", "SellerInfo", "GameItemInfo", "VariantDetail", "BulkDiscountTier", "ListingItemDetail", "GetListingDetailResponse", "PublicData_GetListingDetailResponse_", "StockLotVariant", "LocationInfo", "OwnerInfo", "StockLotDetail", "GetStockLotsResponse", "PublicData_GetStockLotsResponse_"]
+__all__ = ["PublicErrorCode", "Record_string_unknown_", "PublicValidationError", "PublicErrorBody", "PublicShopPermissions", "PublicShop", "PublicShopList", "PublicData_PublicShopList_", "PublicData_PublicShop_", "MyListingItem", "GetMyListingsResponse", "PublicData_GetMyListingsResponse_", "OrderPreview", "GetOrdersResponse", "PublicData_GetOrdersResponse_", "OrderMarketListingV1", "VariantAttributes", "OrderVariantItem", "OrderMarketListingV2", "OrderVariantDetail", "OrderItemDetail", "GetOrderDetailResponse", "PublicData_GetOrderDetailResponse_", "OrderStatusChangeResult", "PublicData_OrderStatusChangeResult_", "OrderStatusChangeBody", "Rating", "BadgeMetadata", "BadgeData", "MinimalUser", "MinimalContractor", "OfferMarketListingV1", "OfferVariantItem", "OfferMarketListingV2", "OfferV2", "DBAvailabilityEntry", "OfferAvailability", "OfferSessionV2", "SearchOffersV2Response", "PublicData_SearchOffersV2Response_", "GetOfferSessionV2Response", "PublicData_GetOfferSessionV2Response_", "OfferAcceptResult", "PublicData_OfferAcceptResult_", "OfferDeclineResult", "PublicData_OfferDeclineResult_", "PublicScope", "PublicOrgRef", "PublicMe", "PublicData_PublicMe_", "ListingDetail", "LastSeenBucket", "ReplyTimeBucket", "SellerActivity", "SellerInfo", "GameItemInfo", "VariantDetail", "BulkDiscountTier", "ListingItemDetail", "GetListingDetailResponse", "PublicData_GetListingDetailResponse_", "StockLotVariant", "LocationInfo", "OwnerInfo", "StockLotDetail", "GetStockLotsResponse", "PublicData_GetStockLotsResponse_"]
